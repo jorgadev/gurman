@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gurman</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h2>gurman</h2>
+      <div class="buttons">
+        <button id="all-button">Vse</button>
+        <button id="fav-button">Priljubljene</button>
+        <button id="add-button">Dodaj +</button>
+      </div>
+    </nav>
+    <div class="first-div">
+      <div class="left">
+        <label id="labell"
+          >Razvrsti po:
+          <select id="sort" name="choose">
+            <option value="Rating">Rating</option>
+            <option value="ETA">ETA</option>
+          </select>
+        </label>
+        <label for="">
+          Država:
+          <select id="type">
+            <option value="serbian">Srbija</option>
+            <option value="bosnian">Bosna in Hercegovina</option>
+            <option value="slovenian">Slovenija</option>
+            <option value="macedonian">Makedonija</option>
+            <option value="croatian">Hrvaška</option>
+            <option value="montenegrin">Črna Gora</option>
+          </select>
+        </label>
+      </div>
+      <div class="right">
+        <form id="search" action="">
+          <input id="search-bar" type="text" placeholder="Search" />
+        </form>
+      </div>
+    </div>
+    <div class="second-div"></div>
+    <main class="cards" id="cards"></main>
+
+    <div class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Restaurant</h2>
+          <button class="close-modal-btn">x</button>
+        </div>
+        <div class="modal-body">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+          <label for="location">Location:</label>
+          <input type="text" id="location" name="location" required />
+          <label for="rating">Rating:</label>
+          <input
+            type="number"
+            id="rating"
+            name="rating"
+            min="0"
+            max="5"
+            required
+          />
+          <label for="eta">ETA:</label>
+          <input
+            type="text"
+            id="eta"
+            name="eta"
+            required
+            pattern="[0-9]+ [a-zA-Z]+"
+          />
+          <label for="tags">Tags:</label>
+          <input type="text" id="tags" name="tags" required />
+          <label for="photo">Photo:</label>
+          <input type="text" id="photo" name="photo" required />
+        </div>
+        <div class="modal-footer">
+          <button class="add-btn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/app.js" defer></script>
+  </body>
+</html>
