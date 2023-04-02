@@ -1,5 +1,6 @@
 import { restaurants as importedRestaurants } from "./restaurants.js";
 
+let view = "all";
 const favButton = document.getElementById("fav-button");
 const cards = document.getElementById("cards");
 const search = document.getElementById("search-bar");
@@ -9,7 +10,9 @@ const addBtn = document.querySelector("#add-button");
 const modal = document.querySelector(".modal");
 const closeModalBtn = document.querySelector(".close-modal-btn");
 const allBtn = document.getElementById("all-button");
+const submitBtn = document.querySelector("#submit-button");
 
+submitBtn.addEventListener("click", submitForm);
 favButton.addEventListener("click", showFavorite);
 type.addEventListener("input", tagsValue);
 sort.addEventListener("input", sortValue);
@@ -35,10 +38,10 @@ function renderingCards(filteredValue) {
       <img src=${item.photo} alt=${item.name} class="card-image" />
       <div class="card-content">
         <h3 class="card-title">${item.name}</h3>
-        <p class="card-description">Location: ${item.location}</p>
-        <p class="card-rating">Rating: ${item.rating}</p>
-        <p class="card-eta">ETA: ${item.ETA}</p>
-        <p class="card-tags">Tags: ${item.Tags.join(", ")}</p>
+        <p class="card-description">Lokacija: ${item.location}</p>
+        <p class="card-rating">Ocena: ${item.rating}</p>
+        <p class="card-eta">ETA (v minutah): ${item.ETA}</p>
+        <p class="card-tags">Oznake: ${item.Tags.join(", ")}</p>
         <button class="add-to-favorites" data-id="${item.id}">${
       favorites.some((fav) => fav.id === item.id)
         ? "Odstrani iz priljubljenih"
@@ -67,7 +70,7 @@ function renderingCards(filteredValue) {
   cards.innerHTML = "";
 
   if (!filteredValue.length) {
-    cards.innerHTML = "Ni nobene restavracije za prikaz...";
+    cards.innerHTML = `<p style="padding: 10px">Ni nobene restavracije za prikaz...</p>`;
     return;
   }
 
@@ -76,8 +79,42 @@ function renderingCards(filteredValue) {
   });
 }
 
+function submitForm(event) {
+  event.preventDefault();
+
+  const name = document.querySelector("#name").value;
+  const location = document.querySelector("#location").value;
+  const photo = document.querySelector("#photo").value;
+  const rating = parseInt(document.querySelector("#rating").value);
+  const eta = parseInt(document.querySelector("#eta").value);
+  const tags = document
+    .querySelector("#tags")
+    .value.split(",")
+    .map((tag) => tag.trim());
+
+  if (!name || !location || !photo || !rating || !eta || !tags) {
+    alert("Prosim vnesite vse podatke.");
+    return false;
+  }
+
+  const newRestaurant = {
+    id: restaurants.length + 1,
+    name: name,
+    location: location,
+    photo: photo,
+    rating: rating,
+    ETA: eta,
+    Tags: tags,
+  };
+
+  restaurants.push(newRestaurant);
+  localStorage.setItem("restaurants", JSON.stringify(restaurants));
+  modal.style.display = "none";
+  showAll();
+}
+
 // Remove from favorites
-function removeFromFav(id) {
+function removeFromFav(id, rerender = false) {
   const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
   const updatedFavorites = favorites.filter(
     (restaurant) => restaurant.id !== id
@@ -86,7 +123,9 @@ function removeFromFav(id) {
   const card = document.querySelector(`[data-id="${id}"]`);
   card.textContent = "Dodaj med priljubljene";
 
-  renderingCards(updatedFavorites);
+  if (view === "favorite") {
+    renderingCards(updatedFavorites);
+  }
 }
 
 //Adding the Functionality to Search
@@ -126,6 +165,7 @@ function tagsValue(event) {
 
 // Show favorites
 function showFavorite() {
+  view = "favorite";
   let retrievedObject = localStorage.getItem("favorites");
   let parse = JSON.parse(retrievedObject);
   renderingCards(parse);
@@ -133,6 +173,7 @@ function showFavorite() {
 
 // Show all
 function showAll() {
+  view = "all";
   let retrievedObject = localStorage.getItem("restaurants");
   let parse = JSON.parse(retrievedObject);
   renderingCards(parse);
