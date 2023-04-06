@@ -31,10 +31,12 @@ if (!restaurants) {
 function renderingCards(filteredValue) {
   const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-  const restMap = filteredValue.map((item) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.innerHTML = `
+  const restMap =
+    filteredValue &&
+    filteredValue.map((item) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `
       <img src=${item.photo} alt=${item.name} class="card-image" />
       <div class="card-content">
         <h3 class="card-title">${item.name}</h3>
@@ -43,33 +45,33 @@ function renderingCards(filteredValue) {
         <p class="card-eta">ETA (v minutah): ${item.ETA}</p>
         <p class="card-tags">Oznake: ${item.Tags.join(", ")}</p>
         <button class="add-to-favorites" data-id="${item.id}">${
-      favorites.some((fav) => fav.id === item.id)
-        ? "Odstrani iz priljubljenih"
-        : "Dodaj med priljubljene"
-    }</button>
+        favorites.some((fav) => fav.id === item.id)
+          ? "Odstrani iz priljubljenih"
+          : "Dodaj med priljubljene"
+      }</button>
       </div>
     `;
 
-    const addToFavButton = card.querySelector(".add-to-favorites");
+      const addToFavButton = card.querySelector(".add-to-favorites");
 
-    addToFavButton.addEventListener("click", () => {
-      const index = favorites.findIndex((fav) => fav.id === item.id);
-      if (index !== -1) {
-        favorites.splice(index, 1);
-        addToFavButton.textContent = "Dodaj med priljubljene";
-        removeFromFav(item.id);
-      } else {
-        favorites.push(item);
-        addToFavButton.textContent = "Odstrani iz priljubljenih";
-      }
-      localStorage.setItem("favorites", JSON.stringify(favorites));
+      addToFavButton.addEventListener("click", () => {
+        const index = favorites.findIndex((fav) => fav.id === item.id);
+        if (index !== -1) {
+          favorites.splice(index, 1);
+          addToFavButton.textContent = "Dodaj med priljubljene";
+          removeFromFav(item.id);
+        } else {
+          favorites.push(item);
+          addToFavButton.textContent = "Odstrani iz priljubljenih";
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+      });
+
+      return card;
     });
-
-    return card;
-  });
   cards.innerHTML = "";
 
-  if (!filteredValue.length) {
+  if (!filteredValue || !filteredValue.length) {
     cards.innerHTML = `<p style="padding: 10px">Ni nobene restavracije za prikaz...</p>`;
     return;
   }
